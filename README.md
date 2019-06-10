@@ -1,6 +1,32 @@
 # Message Badges
 
-Display a count of unread message on the task list component.
+![Message Badges](https://indigo-bombay-5783.twil.io/assets/message-badges.png)
+
+Display a count of unread message on the task list component. Works with both Chat and SMS Channels.
+
+## How it works
+
+Under the hood, Flex uses the Twilio Programmable Chat SDK. It's possible to dip down and interact with the Chat SDK to ask it about unread messages in the channel.
+
+### Key Concepts
+
+* The chat channelSid is stored in the task's attributes.
+* The Flex "manager" object allows you to access the underlying Chat Client
+* Using the above you can instantiate a [channel object](http://media.twiliocdn.com/sdk/js/chat/releases/3.2.3/docs/Channel.html) from the [Twilio Chat SDK](http://media.twiliocdn.com/sdk/js/chat/releases/3.2.3/docs/index.html)
+* Now you can listen to all sorts of [interesting events](http://media.twiliocdn.com/sdk/js/chat/releases/3.2.3/docs/Channel.html#event:memberJoined) that are happening in the underlying chat channel.
+* Ask the Channel object [how many unread messages](http://media.twiliocdn.com/sdk/js/chat/releases/3.2.3/docs/Channel.html#getUnconsumedMessagesCount__anchor) there are.
+
+### Styling Notes
+
+The CSS here is a bit rough at the moment, PR's absolutely welcome. Unfortunately this component must be added AFTER the task list item component in the document flow. I'd prefer to absolutely position the badge relative to the task list item itself, but its not possible to place the badge in the DOM at the correct place right now.
+
+We're using some floats and negative margins at the moment. Again, if theres a better way, please submit a PR.
+
+@TODO: theming support
+
+Twilio Flex Plugin Boilerplate below...
+
+---
 
 ## Setup
 

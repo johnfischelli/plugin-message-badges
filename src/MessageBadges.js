@@ -1,14 +1,18 @@
 import React from 'react';
 
+const badgeWrapper = {
+  display: 'block',
+  float: 'right',
+  marginTop: '-32px',
+  marginRight: '10px'
+}
+
 const badgeStyles = {
-  padding: '6px',
-  margin: '-46px 0px 0px',
   color: '#fff',
   background: '#f00',
   fontWeight: 'bold',
-  fontSize: '1.5rem',
-  display: 'block',
-  float: 'right'
+  padding: '5px 10px',
+  borderRadius: '20px'
 };
 
 export default class MessageBadges extends React.Component {
@@ -23,6 +27,7 @@ export default class MessageBadges extends React.Component {
   componentDidMount() {
     const { selected, flex, task, manager } = this.props;
 
+    // when selecting a specific task, set the unread count to 0
     flex.Actions.addListener('afterSelectTask', (payload) => {
       if (payload.task && payload.task.taskSid === task.taskSid) {
         this.setState({
@@ -32,9 +37,14 @@ export default class MessageBadges extends React.Component {
       }
     })
 
+    // TODO: improve the approach here, a timeout isn't the best way to handle this
+    // the problem: it takes time for the underlying Chat client to initialize - its possible
+    // for flex to ask it for the chat channel before the client has initialized.
+    // the channelSid for the chat channel is stored on the task Attributes!
     setTimeout(() => {
       manager.chatClient.getChannelBySid(task.attributes.channelSid).then((source) => {
         // if the component renders and the task is selected
+        // reset the unread count to 0
         if (selected) {
           this.setState({
             unreadCount: 0
@@ -48,6 +58,7 @@ export default class MessageBadges extends React.Component {
           })
         })
 
+        // listen to the underlying chat channel in Flex
         // when messages are added - count unreads
         source.on('messageAdded', (message) => {
           // if the message was sent by the worker - unreads should be zero
@@ -66,6 +77,7 @@ export default class MessageBadges extends React.Component {
           }
 
           // otherwise, count the unreads
+          // we're using the Chat SDK directly
           source.getUnconsumedMessagesCount().then(count => {
             this.setState({
               unreadCount: count
@@ -82,7 +94,7 @@ export default class MessageBadges extends React.Component {
     }
 
     return (
-      <span style={ badgeStyles }>{ this.state.unreadCount }</span>
+      <div style={ badgeWrapper }><span style={ badgeStyles }>{ this.state.unreadCount }</span></div>
     )
   }
 }
