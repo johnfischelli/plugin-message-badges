@@ -22,8 +22,6 @@ The CSS here is a bit rough at the moment, PR's absolutely welcome. Unfortunatel
 
 We're using some floats and negative margins at the moment. Again, if theres a better way, please submit a PR.
 
-@TODO: theming support
-
 Twilio Flex Plugin Boilerplate below...
 
 ---

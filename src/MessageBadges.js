@@ -1,27 +1,30 @@
 import React from 'react';
+import { withTheme } from '@twilio/flex-ui';
 
-const badgeWrapper = {
-  display: 'block',
-  float: 'right',
-  marginTop: '-32px',
-  marginRight: '10px'
-}
-
-const badgeStyles = {
-  color: '#fff',
-  background: '#f00',
-  fontWeight: 'bold',
-  padding: '5px 10px',
-  borderRadius: '20px'
-};
-
-export default class MessageBadges extends React.Component {
+class MessageBadges extends React.Component {
   constructor(props) {
     super();
+
     this.state = {
       unreadCount: 0
     }
+
     this.props = props;
+
+    this.badgeWrapper = {
+      display: 'block',
+      float: 'right',
+      marginTop: '-32px',
+      marginRight: '10px'
+    }
+
+    this.badgeStyles = {
+      color: props.theme.colors.lightTextColor,
+      background: props.theme.colors.notificationIconColorError,
+      fontWeight: 'bold',
+      padding: '5px 10px',
+      borderRadius: '20px'
+    };
   }
 
   componentDidMount() {
@@ -94,7 +97,9 @@ export default class MessageBadges extends React.Component {
     }
 
     return (
-      <div style={ badgeWrapper }><span style={ badgeStyles }>{ this.state.unreadCount }</span></div>
+      <div style={ this.badgeWrapper }><span style={ this.badgeStyles }>{ this.state.unreadCount }</span></div>
     )
   }
 }
+
+export default withTheme(MessageBadges);
